@@ -32,6 +32,7 @@ The JavaScript SDK for Carpal Fleet UI open source developments
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
+NOTES: Before opening a pull request please make sure your changes follow the [contribution guidelines](https://github.com/CarPalFleet/CarPal-UI/CONTRIBUTING.md).
 ## License
 
 ## Support
