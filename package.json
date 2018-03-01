@@ -19,9 +19,7 @@
     "url": "https://github.com/CarPalFleet/Carpal-UI/issues"
   },
   "homepage": "https://github.com/CarPalFleet/Carpal-UI#readme",
-  "dependencies": {
-    "carpal": "^0.1.43"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-es2017": "^6.24.1"
