@@ -1,0 +1,22 @@
+{
+  "name": "carpal-ui",
+  "version": "0.1.1",
+  "description": "UI SDK for CarPal fleet solution development.",
+  "main": "dist/build.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/CarPalFleet/Carpal-UI.git"
+  },
+  "keywords": [
+    "carpal-ui"
+  ],
+  "author": "win sandy myint",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CarPalFleet/Carpal-UI/issues"
+  },
+  "homepage": "https://github.com/CarPalFleet/Carpal-UI#readme"
+}
