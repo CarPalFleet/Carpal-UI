@@ -13,7 +13,7 @@ export const validator = () => {
     },
 
     /** Add order on the schedule
-     * Rule 2:: Can't be place order on a schdeule
+     * Rule 2 & 10:: Can't be place order on a schdeule
      * @param {object} driverObject
      * @return {}
      */
@@ -81,15 +81,6 @@ export const validator = () => {
      */
     updateDriverSlot: (driverObject) => {
       driverObject.orderId ? indicator.pass : indicator.error;
-    },
-
-    /** Route Location Verticle Moving
-     * Rule 10:: Check for duplicate on destination
-     * @param {object} driverObject
-     * @return {}
-     */
-    update: (driverObject) => {
-      driverObject.jobId ? indicator.error : indicator.pass;
     },
 
     /**
