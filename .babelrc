@@ -1,3 +1,8 @@
 {
   "presets": ["es2017"],
+  "env": {
+    "test": {
+      "presets": ["es2017"]
+    }
+  }
 }
