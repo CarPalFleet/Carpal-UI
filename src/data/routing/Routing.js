@@ -1,6 +1,3 @@
-/* eslint valid-jsdoc: "error"*/
-/* eslint-env es6*/
-
 /**
 * catch exceptions constructor
 * @constructor
@@ -16,7 +13,7 @@ class Exception {
 /**
 * Calculate the usage % of driver.
 * @param {Object} data
-* @returns {string} percentage
+* @return {string} percentage
 */
 
 export const calculateDriverUsage = (data) => {
