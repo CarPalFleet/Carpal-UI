@@ -1,45 +1,72 @@
 import { indicator } from './Indicator';
+import {
+  calculateDriverCapacity,
+  calculateDriverUsability,
+} from '../routing/Routing';
 
 export const validator = () => {
   /* Update Driver Slot*/
   return {
-    /** changeDriverSlot
-     * Rule 1:: Change driver slot that already confirmed order
-     * @param {object} driverObject
-     * @return {}
+    /** Change the driver slot that has confirmed orders
+     * Rule 1:: Can't change the driver slot that has confirmed orders.
+     * Show Error
+     * @param {object} updatedRoute
+     * @return {object} error
      */
-    changeDriverSlot: (driverObject) => {
-      return driverObject.jobId ? indicator.pass : indicator.error;
+    changeDriverSlot: (updatedRoute) => {
+      return updatedRoute.jobId ? indicator.pass : indicator.error;
     },
 
     /** Add order on the schedule
-     * Rule 2 & 10:: Can't be place order on a schdeule
+     * Rule 2. I can't place an order on a schedule that's not available (block user)
+     * Rule 10. You cannot move an order (vertically or horizontally) on a 'locked' job
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     placeOrderOnSchedule: (driverObject) => {
       return driverObject.jobId ? indicator.pass : indicator.error;
     },
 
     /** Check whethere delivery time is earlier than pickup or not
-     * Rule 3 and 5:: Delivery shouldn't be before related pickup
-     * @param {object} pickup
-     * @param {object} delivery
-     * @return {}
+     * Rule 3 :: Delivery shouldn't be before related pickup
+     * Rule 5:: Delivery can't be scheduled before the related pickup (show warning)
+     * @param {object} routeLocations
+     * @return {object} pass/warn/error/noti
      */
-    deliveryBeforePickUp: (pickup, delivery) => {
-      return delivery.startTime >= pickup.startTime
+    deliveryBeforePickUp: (routeLocations) => {
+      let grouppedLocations = routeLocations.reduce(
+        (groups = [], routeLocation, index) => {
+          let locationIndex;
+          if (groups[routeLocation.groupingLocationId].length) {
+            locationIndex = 0;
+          }
+
+          groups[routeLocation.groupingLocationId][locationIndex].push(
+            routeLocation
+          );
+
+          return groups;
+        }
+      );
+
+      return grouppedLocations.find((location, index) => {
+        if (index > 0) {
+          // Skip location index zero, it's pickup
+          return grouppedLocations[0].startTime >= location.startTime;
+        }
+        return false;
+      })
         ? indicator.error
-        : indicator.console.warn;
+        : indicator.pass;
     },
 
     /** Add order on the schedule
      * Rule 4:: Can't be place order on a schdeule
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     duplicatePickUpInSameRoute: (driverObject) => {
-      return this.checkDuplicateInObject(
+      return checkDuplicateInObject(
         'locationTypeId',
         driverObject.routes.routeLocations
       )
@@ -48,45 +75,82 @@ export const validator = () => {
     },
 
     /** Route Location Verticle Moving
-     * Rule 6:: Check for duplicate on destination
+     * Rule 6:: Vertical moving: always move pickup AND drop-off.
+     * Check for duplicate on destination.
+     * don’t move the pickup location on the origin if there’s other drop-off that are not vertically moved. (notify user)
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     checkDuplicateDestination: (driverObject) => {
-      driverObject.jobId ? indicator.error : indicator.pass;
+      return driverObject.find((location, index) => {
+        if (index > 0) {
+          // Skip location index zero, it's pickup
+          return driverObject[0].startTime >= location.startTime;
+        }
+        return false;
+      })
+        ? indicator.error
+        : indicator.pass;
     },
 
     /** Route Location Verticle Moving
-     * Rule 7:: Check for duplicate on destination
+     * Rule 7:: Capacity validation on pop-up: can't choose value smaller than what's on the route already (block user)
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     capacity: (driverObject) => {
-      driverObject.jobId ? indicator.error : indicator.pass;
+      return driverObject.jobId ? indicator.error : indicator.pass;
     },
 
     /** Route Location Verticle Moving
-     * Rule 8:: Check for duplicate on destination
+     * Rule 8:: Capacity validation on pop-up: can't choose value smaller than what's on the route already (block)
+     * Rule 9:: You can't add an order to a route that has insufficient or no capacity (warning)
+     * @param {object} newCapacity
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
-    inSufficientCapacity: (driverObject) => {
-      driverObject.jobId ? indicator.error : indicator.pass;
+    checkCapacityOnRoute: (newCapacity, driverObject) => {
+      return calculateDriverCapacity(newCapacity, driverObject.driver_schedules)
+        ? indicator.pass
+        : indicator.error;
     },
 
     /** Route Location Verticle Moving
      * Rule 9:: Check for duplicate on destination
+     * @param {object} newAvailability
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
-    updateDriverSlot: (driverObject) => {
-      driverObject.orderId ? indicator.pass : indicator.error;
+    checkAvailabilityOnRoute: (newAvailability, driverObject) => {
+      return calculateDriverUsability(
+        newAvailability,
+        driverObject.driver_schedules
+      )
+        ? indicator.pass
+        : indicator.error;
+    },
+
+    /** Update Route Location (Change Sequence) on Order
+     * Rule 10. You cannot move an order (vertically or horizontally) on a 'locked' job
+     * @param {array} driverAssignments
+     * @param {object} updatedRoute
+     * @return {object} pass/warn/error/noti
+     */
+    changeRouteSequenceOnOrder: (driverAssignments, updatedRoute) => {
+      return driverAssignments.find(
+        (assignedRoute) =>
+          updatedRoute.id && assignedRoute.routeId === updatedRoute.id
+      )
+        ? indicator.pass
+        : indicator.error;
     },
 
     /**
      * Rule 11:: Can't add over lapping slot
+     * @param {object} startTime
+     * @param {object} endTime
      * @param {object} driverObject
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     overLappingSlot: (startTime, endTime, driverObject) => {
       if (endTime >= driverObject.startTime) {
@@ -98,18 +162,17 @@ export const validator = () => {
     },
 
     /* Other Dependencies */
-
     /** check duplicate proper in the object
      * @param {string} propertyName
      * @param {array} inputArray
-     * @return {}
+     * @return {object} pass/warn/error/noti
      */
     checkDuplicateInObject: (propertyName, inputArray) => {
-      var seenDuplicate = false,
-        testObject = {};
+      let seenDuplicate = false;
+      let testObject = {};
 
       inputArray.map(function(item) {
-        var itemPropertyName = item[propertyName];
+        let itemPropertyName = item[propertyName];
         if (itemPropertyName in testObject) {
           testObject[itemPropertyName].duplicate = true;
           item.duplicate = true;

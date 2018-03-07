@@ -4,7 +4,7 @@ export const indicator = () => {
       return {
         type: 'pass',
         transactionKey: 'route-validation-pass',
-        message: 'Validation Pass',
+        message: 'Validation Pass', // Update message later
       };
     },
 
@@ -12,7 +12,7 @@ export const indicator = () => {
       return {
         type: 'warn',
         transactionKey: 'route-validation-warn',
-        message: 'Validation Warn',
+        message: 'Validation Warn', // Update message later
       };
     },
 
@@ -20,7 +20,7 @@ export const indicator = () => {
       return {
         type: 'noti',
         transactionKey: 'route-validation-noti',
-        message: 'Validation Noti',
+        message: 'Validation Noti', // Update message later
       };
     },
 
@@ -28,7 +28,7 @@ export const indicator = () => {
       return {
         type: 'error',
         transactionKey: 'route-validation-error',
-        message: 'Validation Error',
+        message: 'Validation Error', // Update message later
       };
     },
   };
