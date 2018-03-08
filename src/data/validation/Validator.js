@@ -187,3 +187,18 @@ export const validator = () => {
     },
   };
 };
+
+// /** Update Route Location (Change Sequence) on Order
+//  * Rule 10. You cannot move an order (vertically or horizontally) on a 'locked' job
+//  * @param {array} driverAssignments
+//  * @param {object} updatedRoute
+//  * @return {object} pass/error object
+//  */
+// export const changeRouteSequenceOnOrder = (driverAssignments, updatedRoute) => {
+//   return findValueInArray(
+//     driverAssignments,
+//     checkRouteSequence.bind(null, updatedRoute)
+//   )
+//     ? indicator.pass
+//     : indicator.error;
+// };
