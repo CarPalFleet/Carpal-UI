@@ -142,7 +142,6 @@ export const overLappingSlot = (startTime, endTime, driverObject) => {
 };
 
 /* Other Dependencies */
-
 /** Check the same value in objects inside of array
  * If there's same value, return true
  * Otherwise return false
