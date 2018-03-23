@@ -1,6 +1,6 @@
 {
   "name": "carpal-ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "UI SDK for CarPal fleet solution development.",
   "main": "dist/build.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "lint": "node_modules/.bin/eslint src",
     "precommit": "lint-staged",
     "precommit:lint": "node_modules/.bin/eslint",
-    "precommit:prettier": "node_modules/.bin/prettier --single-quote --trailing-comma es5 --arrow-parens always --write",
+    "precommit:prettier":
+      "node_modules/.bin/prettier --single-quote --trailing-comma es5 --arrow-parens always --write",
     "prepublish": "npm run build",
     "test": "npm run build && jest src"
   },
@@ -18,18 +19,13 @@
       "npm run precommit:lint",
       "git add"
     ],
-    "*.{json,css,md}": [
-      "npm run precommit:prettier",
-      "git add"
-    ]
+    "*.{json,css,md}": ["npm run precommit:prettier", "git add"]
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/CarPalFleet/Carpal-UI.git"
   },
-  "keywords": [
-    "carpal-ui"
-  ],
+  "keywords": ["carpal-ui"],
   "author": "win sandy myint",
   "license": "MIT",
   "bugs": {
