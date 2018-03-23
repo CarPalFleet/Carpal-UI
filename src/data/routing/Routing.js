@@ -21,22 +21,22 @@ export const calculateDriverUsage = (data) => {
         if (!data) {
             throw new Exception('data is empty');
         }
-        if (!data.driver_schedules || !data.driver_schedules.length) {
-            throw new Exception('driver_schedules is empty');
+        if (!data.driverSchedules || !data.driverSchedules.length) {
+            throw new Exception('driverSchedules is empty');
         }
-        if (!data.driver_assignments || !data.driver_assignments.length) {
-            throw new Exception('driver_assignments is empty');
+        if (!data.driverAssignments || !data.driverAssignments.length) {
+            throw new Exception('driverAssignments is empty');
         }
         let driverSchedulesTime = null;
-        for (let schedules of data.driver_schedules) {
-            let startTime = new Date(`${schedules.start_at} ${schedules.start_time}`).getTime();
-            let endTime = new Date(`${schedules.start_at} ${schedules.end_time}`).getTime();
+        for (let schedules of data.driverSchedules) {
+            let startTime = new Date(`${schedules.startAt} ${schedules.startTime}`).getTime();
+            let endTime = new Date(`${schedules.startAt} ${schedules.endTime}`).getTime();
             driverSchedulesTime += (endTime - startTime);
         }
         let driverAssignmentsTime = null;
-        for (let assignments of data.driver_assignments) {
-            let assignmentStart = new Date(assignments.assignment_start).getTime();
-            let assignmentEnd = new Date(assignments.assignment_end).getTime();
+        for (let assignments of data.driverAssignments) {
+            let assignmentStart = new Date(assignments.assignmentStart).getTime();
+            let assignmentEnd = new Date(assignments.assignmentEnd).getTime();
             driverAssignmentsTime += (assignmentEnd - assignmentStart);
         }
         if (!driverSchedulesTime) {
