@@ -1,6 +1,6 @@
 {
   "name": "carpal-ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "UI SDK for CarPal fleet solution development.",
   "main": "dist/build.js",
   "scripts": {
