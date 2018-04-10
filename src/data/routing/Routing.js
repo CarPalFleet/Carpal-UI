@@ -45,6 +45,6 @@ export const calculateDriverUsage = (data) => {
 
         return (driverAssignmentsTime / driverSchedulesTime).toFixed(4);
     } catch (e) {
-        return e.message;
+        return -1;
     }
 };
